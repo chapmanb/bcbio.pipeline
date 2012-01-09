@@ -1,0 +1,8 @@
+---
+outdir: test/data
+outdir-prep: test/data/prep
+experiments:
+  - sample: Test1
+    analysis: variation
+  - sample: Test2
+    analysis: variation
