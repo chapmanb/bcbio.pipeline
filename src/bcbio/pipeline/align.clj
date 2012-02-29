@@ -9,6 +9,6 @@
   "Novoalign distributed alignments"
   (let [args (concat ["-o" "SAM"
                       "-d" (:ref params)
-                      "-f"] (:fastq params))]
+                      "-in" (:fastq params)])]
     (println args)
     (DistributedNovoalign/main (into-array args))))

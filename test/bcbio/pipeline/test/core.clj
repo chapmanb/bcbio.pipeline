@@ -42,13 +42,16 @@
             (filter needs-download?)
             (map get-test-data))))))
 
-(fact?- "Parse input configuration file into experiments to process."
-        [[{:config {:outdir "test/data", :outdir-prep "test/data/prep"}
-           :sample "Test1", :analysis "variation"}]
-         [{:config {:outdir "test/data", :outdir-prep "test/data/prep"}
-           :sample "Test2", :analysis "variation"}]]
-        (config-to-experiments "test/data/example-config.yaml"))
+(let [config-out [[{:config {:outdir "test/data", :outdir-prep "test/data/prep"}
+                    :sample "Test1", :analysis "variation"}]
+                  [{:config {:outdir "test/data", :outdir-prep "test/data/prep"}
+                    :sample "Test2", :analysis "variation"}]]]
+  (fact "Parse input configuration file into experiments to process."
+    (config-to-experiments "test/data/example-config.yaml")) => (produces config-out))
 
 (against-background [(before :facts (prep-test-data))]
   (fact "Distributed alignment with novoalign"
-    (parallel-align {:aligner :novoalign}) =future=> nil))
+    (let [dl-dir (fs/file "test" "data" "dl")
+          ref-file (str (fs/file dl-dir "genomes" "hg19" "seq" "hg19.fa"))
+          fq-file (str (fs/file dl-dir "100326_FC6107FAAXX" "7_100326_FC6107FAAXX_1_fastq.txt"))]
+      (parallel-align {:aligner :novoalign :ref ref-file :fastq fq-file})) => nil))
