@@ -53,5 +53,7 @@
   (fact "Distributed alignment with novoalign"
     (let [dl-dir (fs/file "test" "data" "dl")
           ref-file (str (fs/file dl-dir "genomes" "hg19" "seq" "hg19.fa"))
-          fq-file (str (fs/file dl-dir "100326_FC6107FAAXX" "7_100326_FC6107FAAXX_1_fastq.txt"))]
-      (parallel-align {:aligner :novoalign :ref ref-file :fastq fq-file})) => nil))
+          fq-base (str (fs/file dl-dir "100326_FC6107FAAXX" "7_100326_FC6107FAAXX_%s.fastq"))]
+      (parallel-align {:aligner :novoalign :ref ref-file
+                       :fastq (format fq-base "1")
+                       :fastq-pair (format fq-base "2")})) => nil))
